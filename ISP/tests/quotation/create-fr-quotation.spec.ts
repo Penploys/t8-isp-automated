@@ -257,7 +257,8 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     await quotationSubClassPage.selectFireInsurance();
     await frCategoryPage.searchRiskCodeBy1Code();
     await frResponsiblePersonPage.nextPage();
-    await frAssuredDetailsPage.fillForm();
+    await frAssuredDetailsPage.fillNaturalPersonForm();
+    await frAssuredDetailsPage.fillAddressForm();
     await frAssuredDetailsPage.nextPage();
     await page.waitForTimeout(1000);
     await frCoverageDetailsPage.validateHouseForm();
@@ -428,7 +429,7 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     await frAssuredDetailsPage.validatePhoneNumber();
   });
 
-  test.only('Search หาข้อมูลที่อยู่ได้ตาม Keyword ที่ต้องการ และเลือกข้อมูลที่อยู่ตามตัวกรองได้ตั้งแต่จังหวัด เขต แขวง และรหัสไปรษณีย์', async ({
+  test('Search หาข้อมูลที่อยู่ได้ตาม Keyword ที่ต้องการ และเลือกข้อมูลที่อยู่ตามตัวกรองได้ตั้งแต่จังหวัด เขต แขวง และรหัสไปรษณีย์', async ({
     page,
     configuration,
     msLoginLogoutPage,
@@ -450,5 +451,109 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     await frCategoryPage.searchRiskCodeBy1Code();
     await frResponsiblePersonPage.nextPage();
     await frAssuredDetailsPage.addressSearchByKeyword();
+  });
+
+  test('ในการกรอกข้อมูลที่อยู่ครั้งแรก สามารถกรอกข้อมูลที่อยู่ทั้งหมดได้ และหากยังไม่มีข้อมูลสถานที่ตั้งหรือเก็บทรัพย์สินเอาประกันภัย สามารถเลือกข้อมูลที่อยู่นี้แล้วนำไปใช้เป็นข้อมูลที่อยู่ของสถานที่ตั้งหรือเก็บทรัพย์สินเอาประกันภัย', async ({
+    page,
+    configuration,
+    msLoginLogoutPage,
+    homePage,
+    quotationPage,
+    quotationSubClassPage,
+    frCategoryPage,
+    frResponsiblePersonPage,
+    frAssuredDetailsPage,
+  }) => {
+    await page.goto(configuration.appSettings.BASE_URL);
+    await msLoginLogoutPage.login(
+        configuration.users.userAE.email,
+        configuration.users.userAE.password
+    );
+    await homePage.accessQuotation();
+    await quotationPage.createFRQuotationFromMainMenu();
+    await quotationSubClassPage.selectFireInsurance();
+    await frCategoryPage.searchRiskCodeBy1Code();
+    await frResponsiblePersonPage.nextPage();
+    await frAssuredDetailsPage.fillNaturalPersonForm();
+    await frAssuredDetailsPage.fillAddressForm();
+    await expect(page.getByText('เลขที่ 123/45, หมู่บ้านทดสอบ, หมู่ 2, ซอย ทดสอบซอย, ถนน ทดสอบถนน, ตำบล/แขวง คลองตัน, อำเภอ/เขต คลองเตย, จังหวัด กรุงเทพมหานคร, 10110').nth(1)).toBeVisible();
+  });
+
+  test('สามารถแก้ไขที่อยู่ของสถานที่ตั้งหรือเก็บทรัพย์สินเอาประกันภัย โดยมีข้อมูลเดิม default ขึ้นมาให้แก้ไข', async ({
+    page,
+    configuration,
+    msLoginLogoutPage,
+    homePage,
+    quotationPage,
+    quotationSubClassPage,
+    frCategoryPage,
+    frResponsiblePersonPage,
+    frAssuredDetailsPage,
+  }) => {
+    await page.goto(configuration.appSettings.BASE_URL);
+    await msLoginLogoutPage.login(
+        configuration.users.userAE.email,
+        configuration.users.userAE.password
+    );
+    await homePage.accessQuotation();
+    await quotationPage.createFRQuotationFromMainMenu();
+    await quotationSubClassPage.selectFireInsurance();
+    await frCategoryPage.searchRiskCodeBy1Code();
+    await frResponsiblePersonPage.nextPage();
+    await frAssuredDetailsPage.fillNaturalPersonForm();
+    await frAssuredDetailsPage.fillAddressForm();
+    await frAssuredDetailsPage.editInsuredAddress();
+  });
+
+  test('สามารถแก้ไขที่อยู่ผู้เอาประกันภัยได้ โดยมีข้อมูลเดิม default ขึ้นมาให้แก้ไข', async ({
+    page,
+    configuration,
+    msLoginLogoutPage,
+    homePage,
+    quotationPage,
+    quotationSubClassPage,
+    frCategoryPage,
+    frResponsiblePersonPage,
+    frAssuredDetailsPage,
+  }) => {
+    await page.goto(configuration.appSettings.BASE_URL);
+    await msLoginLogoutPage.login(
+        configuration.users.userAE.email,
+        configuration.users.userAE.password
+    );
+    await homePage.accessQuotation();
+    await quotationPage.createFRQuotationFromMainMenu();
+    await quotationSubClassPage.selectFireInsurance();
+    await frCategoryPage.searchRiskCodeBy1Code();
+    await frResponsiblePersonPage.nextPage();
+    await frAssuredDetailsPage.fillNaturalPersonForm();
+    await frAssuredDetailsPage.fillAddressForm();
+    await frAssuredDetailsPage.editInsuredLocation();
+  });
+
+  test.only('สามารถลบที่อยู่ผู้เอาประกันภัยได้', async ({
+    page,
+    configuration,
+    msLoginLogoutPage,
+    homePage,
+    quotationPage,
+    quotationSubClassPage,
+    frCategoryPage,
+    frResponsiblePersonPage,
+    frAssuredDetailsPage,
+  }) => {
+    await page.goto(configuration.appSettings.BASE_URL);
+    await msLoginLogoutPage.login(
+        configuration.users.userAE.email,
+        configuration.users.userAE.password
+    );
+    await homePage.accessQuotation();
+    await quotationPage.createFRQuotationFromMainMenu();
+    await quotationSubClassPage.selectFireInsurance();
+    await frCategoryPage.searchRiskCodeBy1Code();
+    await frResponsiblePersonPage.nextPage();
+    await frAssuredDetailsPage.fillNaturalPersonForm();
+    await frAssuredDetailsPage.fillAddressForm();
+    await frAssuredDetailsPage.deleteAddress(0);
   });
 });

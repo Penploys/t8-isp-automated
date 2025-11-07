@@ -9,6 +9,9 @@ export class FRAssuredDetailsPage {
   readonly corporationTypeLabel: Locator;
   readonly userName: Locator;
   readonly userSurname: Locator;
+  readonly corporationName: Locator;
+  readonly corporationSuffix: Locator;
+  readonly corporationSuffixList: Locator;
   readonly emailField: Locator;
   readonly phoneNumber: Locator;
   readonly openAddressForm: Locator;
@@ -16,8 +19,14 @@ export class FRAssuredDetailsPage {
   readonly addressSubDetails: Locator;
   readonly houseNumber: Locator;
   readonly addressLine: Locator;
+  readonly addressMoo: Locator;
+  readonly addressSoi: Locator;
+  readonly addressRoad: Locator;
+  readonly landCode: Locator;
   readonly applyAddress: Locator;
   readonly confirmButton: Locator;
+  readonly editButton: Locator;
+  readonly deleteButton: Locator;
   readonly nextButton: Locator;
 
   constructor(page: Page) {
@@ -29,6 +38,9 @@ export class FRAssuredDetailsPage {
     this.corporationTypeLabel = page.locator('label.MuiFormLabel-root', { hasText:'ประเภทนิติบุคคล' }).first();
     this.userName = page.locator('input[id="insureds.0.firstName"]');
     this.userSurname = page.locator('input[id="insureds.0.lastName"]');
+    this.corporationName = page.locator('input[id="insureds.0.name"]');
+    this.corporationSuffix = page.locator('input[id="insureds.0.suffixName"]');
+    this.corporationSuffixList = page.getByRole('option').first();
     this.emailField = page.locator('input[id="insureds.0.email"]');
     this.phoneNumber = page.locator('input[name="insureds.0.telephone"]')
     this.openAddressForm = page.getByRole("button", { name: "กรอกที่อยู่" });
@@ -36,13 +48,19 @@ export class FRAssuredDetailsPage {
     this.addressSubDetails = page.getByRole('option').first();
     this.houseNumber = page.locator('input[id="address.houseNumber"]');
     this.addressLine = page.locator('input[id="address.addressLine"]');
+    this.addressMoo = page.locator('input[id="address.moo"]');
+    this.addressSoi = page.locator('input[id="address.soi"]');
+    this.addressRoad = page.locator('input[id="address.road"]');
+    this.landCode = page.locator('input[id="address.landCode"]');
     this.applyAddress = page.locator('input[name="isApplyAddress"][type="checkbox"]');
     this.confirmButton = page.getByRole("button", { name: "ยืนยัน" });
+    this.editButton = page.locator('button:has(svg g[id="pencil"])');
+    this.deleteButton = page.locator('button:has(svg g[id="trash-2"])');
     this.nextButton = page.getByRole("button", { name: "เริ่มคำนวณเบี้ย" });
   }
 
-  //ใส่ข้อมูลทั้งหมดลงในช่องที่ระบบต้องการให้ระบุ
-  async fillForm() {
+  //ใส่ข้อมูลคำนำหน้าชื่อแบบรายบุคคล พร้อมชื่อและนามสกุล
+  async fillNaturalPersonForm() {
     await this.nameTitle.click();
     const titleOption = this.page.getByRole('option', { name: "นาย" }).first();
     await titleOption.click();
@@ -51,7 +69,22 @@ export class FRAssuredDetailsPage {
     await this.userName.fill('สมหมาย');
 
     await this.userSurname.fill('คลายเหงา');
+  }
 
+  //ใส่ข้อมูลคำนำหน้าชื่อแบบนิติบุคคล พร้อมชื่อนิติบุคคลและประเภทนิติบุคคล
+  async fillJuristicPersonForm() {
+    await this.nameTitle.click();
+    const titleOption = this.page.getByRole('option', { name: "สำนักงาน" }).first();
+    await titleOption.click();
+
+    await this.corporationName.scrollIntoViewIfNeeded();
+    await this.corporationName.fill('QA Testing');
+
+    await this.corporationSuffix.fill('บริษัท');
+    await this.corporationSuffixList.click();
+  }
+
+  async fillAddressForm() {
     await this.openAddressForm.scrollIntoViewIfNeeded();
     await this.openAddressForm.click();
     await this.addressDetails.click();
@@ -61,8 +94,72 @@ export class FRAssuredDetailsPage {
       await this.page.waitForTimeout(200);
     };
 
+    await this.houseNumber.fill('123/45');
+    await this.addressLine.fill('หมู่บ้านทดสอบ');
+    await this.addressMoo.fill('2');
+    await this.addressSoi.fill('ทดสอบซอย');
+    await this.addressRoad.fill('ทดสอบถนน');
+    
     await this.applyAddress.click();
     await this.confirmButton.click();
+  }
+
+  //กดปุ่มแก้ไขที่อยู่ของผู้เอาประกันภัย และแก้ไขข้อมูลที่อยู่
+  async editInsuredAddress() {
+    await this.editButton.nth(0).click();
+    await this.page.waitForTimeout(500);
+
+    //ตรวจสอบข้อมูลที่แสดงผลในช่องที่อยู่ก่อนแก้ไข
+    await expect(this.addressDetails).toHaveValue('กรุงเทพมหานคร, คลองเตย, คลองตัน, 10110');
+    await expect(this.houseNumber).toHaveValue('123/45');
+    await expect(this.addressLine).toHaveValue('หมู่บ้านทดสอบ');
+    await expect(this.addressMoo).toHaveValue('2');
+    await expect(this.addressSoi).toHaveValue('ทดสอบซอย');
+    await expect(this.addressRoad).toHaveValue('ทดสอบถนน');
+
+    //แก้ไขข้อมูลที่อยู่
+    await this.houseNumber.fill('');
+    await this.addressLine.fill('');
+    await this.addressMoo.fill('');
+    await this.addressSoi.fill('');
+    await this.addressRoad.fill('');
+    
+    await this.confirmButton.click();
+
+    await expect(this.page.getByText('ตำบล/แขวง คลองตัน, อำเภอ/เขต คลองเตย, จังหวัด กรุงเทพมหานคร, 10110').nth(0)).toBeVisible();
+  }
+
+  //กดปุ่มแก้ไขที่อยู่ของสถานที่ตั้งหรือเก็บทรัพย์สินเอาประกันภัย และแก้ไขข้อมูลที่อยู่
+  async editInsuredLocation() {
+    await this.editButton.nth(1).click();
+    await this.page.waitForTimeout(500);
+
+    //ตรวจสอบข้อมูลที่แสดงผลในช่องที่อยู่ก่อนแก้ไข
+    await expect(this.addressDetails).toHaveValue('กรุงเทพมหานคร, คลองเตย, คลองตัน, 10110');
+    await expect(this.houseNumber).toHaveValue('123/45');
+    await expect(this.addressLine).toHaveValue('หมู่บ้านทดสอบ');
+    await expect(this.addressMoo).toHaveValue('2');
+    await expect(this.addressSoi).toHaveValue('ทดสอบซอย');
+    await expect(this.addressRoad).toHaveValue('ทดสอบถนน');
+
+    //แก้ไขข้อมูลที่อยู่
+    await this.houseNumber.fill('');
+    await this.addressLine.fill('');
+    await this.addressMoo.fill('');
+    await this.addressSoi.fill('');
+    await this.addressRoad.fill('');
+    //เพิ่มเลขที่โฉนด
+    await this.landCode.fill('123');
+    
+    await this.confirmButton.click();
+
+    await expect(this.page.getByText('ตำบล/แขวง คลองตัน, อำเภอ/เขต คลองเตย, จังหวัด กรุงเทพมหานคร, 10110').nth(1)).toBeVisible();
+    await expect(this.page.getByText('เลขที่โฉนด : 123')).toBeVisible();
+  }
+
+  //กดปุ่มลบที่อยู่
+  async deleteAddress(index=0) {
+    await this.deleteButton.nth(index).click();
   }
 
   //กดปุ่ม "เริ่มคำนวณเบี้ย"
@@ -133,8 +230,6 @@ export class FRAssuredDetailsPage {
   async addressSearchByKeyword() {
     await this.openAddressForm.scrollIntoViewIfNeeded();
     await this.openAddressForm.click();
-    test.setTimeout(0);
-    await this.page.pause();
 
     //ใส่แค่จังหวัดและอำเภอก่อน ตอนนี้มีบัคที่ระบบไม่สามารถค้นหาตำบลหลังจากอำเภอได้
     //โฟกัสก่อน แล้วพิมพ์ให้เหมือน user พิมพ์จริง ป้องกันระบบไม่ autocomplete ให้
