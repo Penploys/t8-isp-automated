@@ -1,0 +1,21 @@
+{
+  "userAE": {
+    "email": "isp.qaAEFR@horixon-t8.tech",
+    "password": "24rOp6614Gft"
+  },
+  "userSSP": {
+    "email": "isp.qaSSPFR@horixon-t8.tech",
+    "password": "1fJl6JA4wt9G"
+  },
+  "userUW": {
+    "email": "isp.qaUWFR@horixon-t8.tech",
+    "password": "1i3SQ3Q9g1fM"
+  },
+  "userInvalidEmail": {
+    "email": "isp.qaFAIL@horixon-t8.tech"
+  },
+  "userInvalidPassword": {
+    "email": "isp.qaAEFR@horixon-t8.tech",
+    "password": "12345678910"
+  }
+}
