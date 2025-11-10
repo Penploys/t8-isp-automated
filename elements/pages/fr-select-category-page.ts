@@ -41,11 +41,11 @@ export class FRCategoryPage {
   }
 
   //กดปุ่ม "ย้อนกลับ" แล้วตรวจสอบว่า Checkbox ที่เลือกไปรอบก่อนยังคงถูกเลือกอยู่
-  async backPageAndValidateCheckedBox() {
+  async backPageAndValidateCheckedBox(code: string) {
     await this.backButton.click();
 
     //ใช้ search ชื่อเดียวกับฟังก์ชั่น searchRiskCodeBy1Code เพราะจะเช็คตัวเดิมที่เคยติ๊กไว้ หากมันอยู่ด้านล่างเพื่อไม่ให้ต้องเสียเวลา Scroll ลงไปหา
-    await this.searchRiskCode.fill('1032');
+    await this.searchRiskCode.fill(code);
     await expect(this.fireInsuranceCategoryCheckbox.first()).toBeVisible();
     const isChecked = await this.fireInsuranceCategoryCheckbox.first().isChecked();
     await expect(isChecked).toBeTruthy();

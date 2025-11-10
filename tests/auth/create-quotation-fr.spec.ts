@@ -337,7 +337,9 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
         configuration.riskCodes.riskcode1032.code
     );
     // ย้อนกลับไปที่หน้าเลือก Risk Code และตรวจสอบว่า Checkbox ที่เลือกไว้ยังคงถูกเลือกอยู่
-    await frCategoryPage.backPageAndValidateCheckedBox();
+    await frCategoryPage.backPageAndValidateCheckedBox(
+        configuration.riskCodes.riskcode1032.code
+    );
   });
 
   test('การระบุข้อมูลผู้เอาประกันภัยแบบบุคคล', async ({
