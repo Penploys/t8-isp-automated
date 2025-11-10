@@ -84,6 +84,7 @@ export class FRAssuredDetailsPage {
     await this.corporationSuffixList.click();
   }
 
+  //กรอกข้อมูลที่อยู่ของผู้เอาประกันภัย และนำไปใช้กับสถานที่เอาประกันภัย
   async fillAddressForm() {
     await this.openAddressForm.scrollIntoViewIfNeeded();
     await this.openAddressForm.click();
@@ -168,7 +169,7 @@ export class FRAssuredDetailsPage {
   }
 
   //ตรวจสอบการแสดงผลของชื่อและนามสกุล เมื่อเลือกคำนำหน้าเป็นแบบรายบุคคล
-  async validateNuturalPersonType() {
+  async validateNaturalPersonType() {
     await this.nameTitle.fill('นาย');
     const titleOption = this.page.getByRole('option', { name: "นาย" }).first();
     await titleOption.click();
@@ -201,7 +202,7 @@ export class FRAssuredDetailsPage {
   }
 
   //ใส่คำนำหน้าชื่อเป็นแบบรายบุคคล และตรวจสอบช่องระบุชื่อและนามสกุลหากไม่ใส่ข้อมูลลงไป
-  async fillJustNameTitleForNuturalPerson() {
+  async fillJustNameTitleForNaturalPerson() {
     await this.nameTitle.fill('นาย'); //เลือกคำนำหน้าชื่อแบบบุคคล เช่น นาย
     const titleOption = this.page.getByRole('option', { name: "นาย" }).first(); //เปลี่ยน name ให้ตรงกับที่ค้นหา
     await titleOption.click();

@@ -33,12 +33,12 @@ export class QuotationPage {
     this.validateMRQuotation = page.getByText('ประกันภัยทางทะเลและขนส่ง (MR)');
   }
 
-  //สร้างใบเสนอราคา ประกันอัคคีภัย (FR) จากเมนูหลัก และ Navigate Bar
+  //สร้างใบเสนอราคา ประกันอัคคีภัย (FR) จากเมนูหลัก และ Navigation Bar
   async createFRQuotationFromMainMenu() {
     await this.createFRButton.click();
   }
 
-  //นำเมาส์ไปชี้ที่เมนูบน navigate bar แล้วตรวจสอบหัวข้อในนั้น
+  //นำเมาส์ไปชี้ที่เมนูบน navigation bar แล้วตรวจสอบหัวข้อย่อยของ Sub-class ในั้น
   async hoverFRQuotationFromNavBar() {
     await this.navQuotation.hover();
     await expect(this.validateFRQuotation.first()).toBeVisible();
@@ -48,13 +48,13 @@ export class QuotationPage {
     await expect(this.validateMRQuotation.first()).toBeVisible();
   }
 
-  //สร้างใบเสนอราคา FR จากเมนูใน navigate bar
+  //สร้างใบเสนอราคา FR จากเมนูใน navigation bar
   async createFRQuotationFromNavBar() {
     await this.navQuotation.hover();
     await this.validateFRQuotation.first().click();
   }
 
-  // //สร้างใบเสนอราคา ประกันภัยเบ็ดเตล็ด (MI) จากเมนูหลัก และ Navigate Bar
+  // //สร้างใบเสนอราคา ประกันภัยเบ็ดเตล็ด (MI) จากเมนูหลัก และ Navigation Bar
   // async createMIQuotationFromMainMenu() {
   //   await this.createMIButton.click();
   // }

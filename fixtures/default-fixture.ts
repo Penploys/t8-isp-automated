@@ -40,8 +40,8 @@ const test = base.extend<TestFixtures>({
   quotationSubClassPage: async ({ page }, use) => {
     await use(new FRQuotationSubClassPage(page));
   },
-  frCategoryPage: async ({ page }, use) => {
-    await use(new FRCategoryPage(page));
+  frCategoryPage: async ({ page, configuration }, use) => {
+    await use(new FRCategoryPage(page, configuration));
   },
   frResponsiblePersonPage: async ({ page }, use) => {
     await use(new FRResponsiblePersonPage(page));

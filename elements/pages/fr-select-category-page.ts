@@ -1,33 +1,19 @@
 import { Page, Locator, expect, test } from "@playwright/test";
+import { Configuration } from "../../configurations/configuration";
 
 export class FRCategoryPage {
   readonly page: Page;
+  readonly categories: string[];
+  readonly riskcodeCategories: string[];
   readonly searchRiskCode: Locator;
   readonly fireInsuranceCategoryCheckbox: Locator;
   readonly nextButton: Locator;
   readonly backButton: Locator;
-  readonly categories: string[];
 
-  constructor(page: Page) {
+  constructor(page: Page, configuration: Configuration) {
     this.page = page;
-
-    this.categories = [
-      'ตัวเลือกยอดนิยม',
-      'อาคารและสถานที่อยู่อาศัย',
-      'ร้านค้าและบริการ',
-      'โรงพยาบาลและสถานพยาบาล',
-      'โรงงานและอุตสาหกรรม',
-      'โกดังเก็บสินค้า',
-      'การเกษตรและปศุสัตว์',
-      'ตลาดและสถานที่ค้าขาย',
-      'สถานที่บันเทิงและสันทนาการ',
-      'สถานที่ราชการและการศึกษา',
-      'ศาสนาและวัฒนธรรม',
-      'เทคโนโลยีและโครงสร้างพื้นฐานดิจิทัล',
-      'สถานที่ราชการและธนาคาร',
-      'พลังงานและสถานีบริการเชื้อเพลิง',
-      'อื่นๆ',
-    ];
+    this.categories = configuration.categories;
+    this.riskcodeCategories = configuration.riskcodeCategories;
 
     this.searchRiskCode = page.getByRole('textbox', { name: "ค้นหา" });
     this.fireInsuranceCategoryCheckbox = page
@@ -78,10 +64,14 @@ export class FRCategoryPage {
 
   //ค้นหาหมายเลข Risk Code แล้วเลือกแค่ Risk Code เดียว
   async searchRiskCodeBy1Code() {
-    await this.searchRiskCode.fill('1032');
+    // ค้นหา index ของรหัสที่ต้องการ
+    const firstIndex = this.riskcodeCategories.findIndex(code => code.startsWith('1032'));
+    // ดึงรหัสจาก configuration โดยเลือกเฉพาะ 4 ตัวแรก
+    const firstCode = this.riskcodeCategories[firstIndex].substring(0, 4); // จะได้ '1032'
+    await this.searchRiskCode.fill(firstCode);
     await this.page.waitForTimeout(500);
     const grid = this.page.locator(".ReactVirtualized__Grid");
-    const resultInput = grid.locator('.MuiBox-root:has-text("1032")')
+    const resultInput = grid.locator(`.MuiBox-root:has-text("${firstCode}")`)
     await expect(resultInput.first()).toBeVisible();
     await this.selectCheckbox();
     await this.nextPage();
@@ -89,19 +79,25 @@ export class FRCategoryPage {
 
   //ค้นหาหมายเลข Risk Code แล้วเลือก 2 Risk Code
   async searchRiskCodeBy2Codes() {
-    await this.searchRiskCode.fill('1032');
+    // ค้นหา index ของรหัสที่ต้องการ
+    const firstIndex = this.riskcodeCategories.findIndex(code => code.startsWith('1032'));
+    const secondIndex = this.riskcodeCategories.findIndex(code => code.startsWith('1074'));
+    // ดึงรหัสจาก configuration โดยเลือกเฉพาะ 4 ตัวแรก
+    const firstCode = this.riskcodeCategories[firstIndex].substring(0, 4); // จะได้ '1032'
+    const secondCode = this.riskcodeCategories[secondIndex].substring(0, 4); // จะได้ '1074'
+    await this.searchRiskCode.fill(firstCode);
     await this.page.waitForTimeout(500);
     const grid = this.page.locator(".ReactVirtualized__Grid");
-    const resultInput1 = grid.locator('.MuiBox-root:has-text("1032")')
+    const resultInput1 = grid.locator(`.MuiBox-root:has-text("${firstCode}")`)
     await expect(resultInput1.first()).toBeVisible();
     await this.selectCheckbox();
 
     await this.searchRiskCode.fill('');
     await this.page.waitForTimeout(500);
 
-    await this.searchRiskCode.fill('1074');
+    await this.searchRiskCode.fill(secondCode);
     await this.page.waitForTimeout(500);
-    const resultInput2 = grid.locator('.MuiBox-root:has-text("1074")')
+    const resultInput2 = grid.locator(`.MuiBox-root:has-text("${secondCode}")`)
     await expect(resultInput2.first()).toBeVisible();
     await this.selectCheckbox();
 

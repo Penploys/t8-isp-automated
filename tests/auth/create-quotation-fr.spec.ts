@@ -8,27 +8,35 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     homePage,
     quotationPage,
   }) => {
+    // เข้าสู่ระบบด้วย AE User
     await page.goto(configuration.appSettings.BASE_URL);
     await msLoginLogoutPage.login(
         configuration.users.userAE.email,
         configuration.users.userAE.password
     );
+    // ไปที่หน้าใบเสนอราคา
     await homePage.accessQuotation();
+    // นำเมาส์ไปวางที่เมนูใบเสนอราคาบน navigate bar แล้วตรวจสอบหัวข้อย่อยในนั้น
     await quotationPage.hoverFRQuotationFromNavBar();
   });
 
-  test('ระบบต้องแสดงฟีเจอร์ภายใต้เมนูใบเสนอราคาได้', async ({
+  test('ระบบต้องแสดงฟีเจอร์ภายใต้เมนูใบเสนอราคาได้ และผู้ใช้สามารถเข้าสู่หน้าจอเลือก Class ของประกันได้', async ({
     page,
     configuration,
     msLoginLogoutPage,
     homePage,
+    quotationPage,
   }) => {
+    // เข้าสู่ระบบด้วย AE User
     await page.goto(configuration.appSettings.BASE_URL);
     await msLoginLogoutPage.login(
         configuration.users.userAE.email,
         configuration.users.userAE.password
     );
+    // ไปที่หน้าใบเสนอราคา
     await homePage.accessQuotation();
+    //ตรวจสอบว่าหน้าเมนูหลักแสดงผลครบตาม Test Case ไหม
+    await quotationPage.validationQuotationMenuVisible();
   });
 
   test('ระบบต้อง redirect user กลับไปยังหน้าจอหลัก', async ({
@@ -37,31 +45,18 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     msLoginLogoutPage,
     homePage,
   }) => {
+    // เข้าสู่ระบบด้วย AE User
     await page.goto(configuration.appSettings.BASE_URL);
     await msLoginLogoutPage.login(
         configuration.users.userAE.email,
         configuration.users.userAE.password
     );
+    // ไปที่หน้าใบเสนอราคา
     await homePage.accessQuotation();
+    // กลับไปที่หน้าหลัก
     await homePage.redirectToMainMenu();
+    // ตรวจสอบว่ากลับมาที่หน้าหลักสำเร็จผ่านข้อความ
     await expect(page.getByText("ทิพยเคียงคู่คุณมาอย่างยาวนานและมั่นคงด้วยประสบการณ์กว่า 70 ปี")).toBeVisible();
-  });
-
-  test('ผู้ใช้สามารถเข้าสู่หน้าจอเลือก Class ของประกันได้', async ({
-    page,
-    configuration,
-    msLoginLogoutPage,
-    homePage,
-    quotationPage,
-  }) => {
-    await page.goto(configuration.appSettings.BASE_URL);
-    await msLoginLogoutPage.login(
-        configuration.users.userAE.email,
-        configuration.users.userAE.password
-    );
-    await homePage.accessQuotation();
-    //ตรวจสอบว่าหน้าเมนูหลักแสดงผลครบตาม Test Case ไหม
-    await quotationPage.validationQuotationMenuVisible();
   });
 
   test('ผู้ใช้สามารถสร้างใบเสนอราคาของ Class ประกันอัคคีภัย (FR) ได้จากหน้าจอหลักของระบบ', async ({
@@ -71,13 +66,17 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     homePage,
     quotationPage,
   }) => {
+    // เข้าสู่ระบบด้วย AE User
     await page.goto(configuration.appSettings.BASE_URL);
     await msLoginLogoutPage.login(
         configuration.users.userAE.email,
         configuration.users.userAE.password
     );
+    // ไปที่หน้าใบเสนอราคา
     await homePage.accessQuotation();
+    // สร้างใบเสนอราคา FR จากเมนูหลัก
     await quotationPage.createFRQuotationFromMainMenu();
+    // ตรวจสอบว่าหน้าจอเลือก Sub-Class จากหัวข้อว่าแสดงผลถูกต้อง
     await expect(page.getByRole('heading', { name: 'เลือกกลุ่มประกันภัยย่อยประกันอัคคีภัย (Sub Class)' })).toBeVisible();
   });
 
@@ -88,13 +87,17 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     homePage,
     quotationPage,
   }) => {
+    // เข้าสู่ระบบด้วย AE User
     await page.goto(configuration.appSettings.BASE_URL);
     await msLoginLogoutPage.login(
         configuration.users.userAE.email,
         configuration.users.userAE.password
     );
+    // ไปที่หน้าใบเสนอราคา
     await homePage.accessQuotation();
+    // สร้างใบเสนอราคา FR จากเมนูใบเสนอราคาใน navigation bar
     await quotationPage.createFRQuotationFromNavBar();
+    // ตรวจสอบว่าหน้าจอเลือก Sub-Class จากหัวข้อว่าแสดงผลถูกต้อง
     await expect(page.getByRole('heading', { name: 'เลือกกลุ่มประกันภัยย่อยประกันอัคคีภัย (Sub Class)' })).toBeVisible();
   });
 
@@ -105,13 +108,17 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     homePage,
     quotationPage,
   }) => {
+    // เข้าสู่ระบบด้วย AE User
     await page.goto(configuration.appSettings.BASE_URL);
     await msLoginLogoutPage.login(
         configuration.users.userAE.email,
         configuration.users.userAE.password
     );
+    // ไปที่หน้าใบเสนอราคา
     await homePage.accessQuotation();
+    // สร้างใบเสนอราคา FR จากเมนูหลัก
     await quotationPage.createFRQuotationFromMainMenu();
+    // ย้อนกลับไปที่หน้าเมนูหลักใบเสนอราคา
     await homePage.backToPreviousPage();
     //ตรวจสอบว่าหน้าเมนูหลักแสดงผลครบตาม Test Case ไหม
     await quotationPage.validationQuotationMenuVisible();
@@ -125,13 +132,17 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     quotationPage,
     quotationSubClassPage,
   }) => {
+    // เข้าสู่ระบบด้วย AE User
     await page.goto(configuration.appSettings.BASE_URL);
     await msLoginLogoutPage.login(
         configuration.users.userAE.email,
         configuration.users.userAE.password
     );
+    // ไปที่หน้าใบเสนอราคา
     await homePage.accessQuotation();
+    // สร้างใบเสนอราคา FR จากเมนูหลัก
     await quotationPage.createFRQuotationFromMainMenu();
+    // เลือก Sub-Class FR
     await quotationSubClassPage.selectFireInsurance();
   });
 
@@ -143,13 +154,17 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     quotationPage,
     quotationSubClassPage,
   }) => {
+    // เข้าสู่ระบบด้วย AE User
     await page.goto(configuration.appSettings.BASE_URL);
     await msLoginLogoutPage.login(
         configuration.users.userAE.email,
         configuration.users.userAE.password
     );
+    // ไปที่หน้าใบเสนอราคา
     await homePage.accessQuotation();
+    // สร้างใบเสนอราคา FR จากเมนูหลัก
     await quotationPage.createFRQuotationFromMainMenu();
+    // ตรวจสอบว่าไม่สามารถเลือก Sub-Class CL ได้
     await quotationSubClassPage.validateCLDisabled();
   });
 
@@ -162,15 +177,18 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     quotationSubClassPage,
     frCategoryPage,
   }) => {
+    // เข้าสู่ระบบด้วย AE User
     await page.goto(configuration.appSettings.BASE_URL);
     await msLoginLogoutPage.login(
         configuration.users.userAE.email,
         configuration.users.userAE.password
     );
+    // ไปที่หน้าใบเสนอราคา
     await homePage.accessQuotation();
+    // สร้างใบเสนอราคา FR จากเมนูหลัก
     await quotationPage.createFRQuotationFromMainMenu();
+    // เลือก Sub-Class FR
     await quotationSubClassPage.selectFireInsurance();
-
     //ตรวจสอบหมวดหมู่ของ Risk Code ต่างๆ
     await frCategoryPage.validateRiskCode();
   });
@@ -184,14 +202,19 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     quotationSubClassPage,
     frCategoryPage,
   }) => {
+    // เข้าสู่ระบบด้วย AE User
     await page.goto(configuration.appSettings.BASE_URL);
     await msLoginLogoutPage.login(
         configuration.users.userAE.email,
         configuration.users.userAE.password
     );
+    // ไปที่หน้าใบเสนอราคา
     await homePage.accessQuotation();
+    // สร้างใบเสนอราคา FR จากเมนูหลัก
     await quotationPage.createFRQuotationFromMainMenu();
+    // เลือก Sub-Class FR
     await quotationSubClassPage.selectFireInsurance();
+    // ค้นหา Risk Code จากชื่อหรือรหัส
     await frCategoryPage.searchRiskCodeByNameOrCode();
   });
 
@@ -204,14 +227,19 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     quotationSubClassPage,
     frCategoryPage,
   }) => {
+    // เข้าสู่ระบบด้วย AE User
     await page.goto(configuration.appSettings.BASE_URL);
     await msLoginLogoutPage.login(
         configuration.users.userAE.email,
         configuration.users.userAE.password
     );
+    // ไปที่หน้าใบเสนอราคา
     await homePage.accessQuotation();
+    // สร้างใบเสนอราคา FR จากเมนูหลัก
     await quotationPage.createFRQuotationFromMainMenu();
+    // เลือก Sub-Class FR
     await quotationSubClassPage.selectFireInsurance();
+    // เลือก Risk Code จากรหัส 1 รายการ
     await frCategoryPage.searchRiskCodeBy1Code();
   });
 
@@ -224,14 +252,19 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     quotationSubClassPage,
     frCategoryPage,
   }) => {
+    // เข้าสู่ระบบด้วย AE User
     await page.goto(configuration.appSettings.BASE_URL);
     await msLoginLogoutPage.login(
         configuration.users.userAE.email,
         configuration.users.userAE.password
     );
+    // ไปที่หน้าใบเสนอราคา
     await homePage.accessQuotation();
+    // สร้างใบเสนอราคา FR จากเมนูหลัก
     await quotationPage.createFRQuotationFromMainMenu();
+    // เลือก Sub-Class FR
     await quotationSubClassPage.selectFireInsurance();
+    // เลือก Risk Code จากรหัส 2 รายการ
     await frCategoryPage.searchRiskCodeBy2Codes();
   });
 
@@ -247,20 +280,27 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     frAssuredDetailsPage,
     frCoverageDetailsPage,
   }) => {
+    // เข้าสู่ระบบด้วย AE User
     await page.goto(configuration.appSettings.BASE_URL);
     await msLoginLogoutPage.login(
         configuration.users.userAE.email,
         configuration.users.userAE.password
     );
+    // ไปที่หน้าใบเสนอราคา
     await homePage.accessQuotation();
+    // สร้างใบเสนอราคา FR จากเมนูหลัก
     await quotationPage.createFRQuotationFromMainMenu();
+    // เลือก Sub-Class FR
     await quotationSubClassPage.selectFireInsurance();
+    // เลือก Risk Code ประเภท House 1 รายการ
     await frCategoryPage.searchRiskCodeBy1Code();
+    // กดปุ่ม "ถัดไป" ในหน้าผู้รับผิดชอบ
     await frResponsiblePersonPage.nextPage();
+    // กรอกข้อมูลผู้เอาประกันภัยแบบบุคคลและข้อมูลที่อยู่ผู้เอาประกันภัย แล้วไปหน้ารายละเอียดความคุ้มครอง
     await frAssuredDetailsPage.fillNaturalPersonForm();
     await frAssuredDetailsPage.fillAddressForm();
     await frAssuredDetailsPage.nextPage();
-    await page.waitForTimeout(1000);
+    // ตรวจสอบว่าหน้ารายละเอียดความคุ้มครองแสดงฟอร์มของประเภท House
     await frCoverageDetailsPage.validateHouseForm();
   });
 
@@ -273,15 +313,21 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     quotationSubClassPage,
     frCategoryPage,
   }) => {
+    // เข้าสู่ระบบด้วย AE User
     await page.goto(configuration.appSettings.BASE_URL);
     await msLoginLogoutPage.login(
         configuration.users.userAE.email,
         configuration.users.userAE.password
     );
+    // ไปที่หน้าใบเสนอราคา
     await homePage.accessQuotation();
+    // สร้างใบเสนอราคา FR จากเมนูหลัก
     await quotationPage.createFRQuotationFromMainMenu();
+    // เลือก Sub-Class FR
     await quotationSubClassPage.selectFireInsurance();
+    // เลือก Risk Code จากรหัส 1 รายการ
     await frCategoryPage.searchRiskCodeBy1Code();
+    // ย้อนกลับไปที่หน้าเลือก Risk Code และตรวจสอบว่า Checkbox ที่เลือกไว้ยังคงถูกเลือกอยู่
     await frCategoryPage.backPageAndValidateCheckedBox();
   });
 
@@ -296,17 +342,24 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     frResponsiblePersonPage,
     frAssuredDetailsPage,
   }) => {
+    // เข้าสู่ระบบด้วย AE User
     await page.goto(configuration.appSettings.BASE_URL);
     await msLoginLogoutPage.login(
         configuration.users.userAE.email,
         configuration.users.userAE.password
     );
+    // ไปที่หน้าใบเสนอราคา
     await homePage.accessQuotation();
+    // สร้างใบเสนอราคา FR จากเมนูหลัก
     await quotationPage.createFRQuotationFromMainMenu();
+    // เลือก Sub-Class FR
     await quotationSubClassPage.selectFireInsurance();
+    // เลือก Risk Code จากรหัส 1 รายการ
     await frCategoryPage.searchRiskCodeBy1Code();
+    // กดปุ่ม "ถัดไป" ในหน้าผู้รับผิดชอบ
     await frResponsiblePersonPage.nextPage();
-    await frAssuredDetailsPage.validateNuturalPersonType();
+    // ตรวจสอบการแสดงผลของชื่อและนามสกุล เมื่อเลือกคำนำหน้าเป็นแบบรายบุคคล
+    await frAssuredDetailsPage.validateNaturalPersonType();
   });
 
   test('การ Validate Required Field ของข้อมูลผู้เอาประกันภัยแบบบุคคล', async ({
@@ -320,17 +373,24 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     frResponsiblePersonPage,
     frAssuredDetailsPage,
   }) => {
+    // เข้าสู่ระบบด้วย AE User
     await page.goto(configuration.appSettings.BASE_URL);
     await msLoginLogoutPage.login(
         configuration.users.userAE.email,
         configuration.users.userAE.password
     );
+    // ไปที่หน้าใบเสนอราคา
     await homePage.accessQuotation();
+    // สร้างใบเสนอราคา FR จากเมนูหลัก
     await quotationPage.createFRQuotationFromMainMenu();
+    // เลือก Sub-Class FR
     await quotationSubClassPage.selectFireInsurance();
+    // เลือก Risk Code จากรหัส 1 รายการ
     await frCategoryPage.searchRiskCodeBy1Code();
+    // กดปุ่ม "ถัดไป" ในหน้าผู้รับผิดชอบ
     await frResponsiblePersonPage.nextPage();
-    await frAssuredDetailsPage.fillJustNameTitleForNuturalPerson();
+    // ใส่คำนำหน้าชื่อเป็นแบบรายบุคคล และตรวจสอบช่องระบุชื่อและนามสกุลหากไม่ใส่ข้อมูลลงไป
+    await frAssuredDetailsPage.fillJustNameTitleForNaturalPerson();
   });
 
   test('การระบุข้อมูลผู้เอาประกันภัยแบบนิติบุคคล', async ({
@@ -344,16 +404,23 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     frResponsiblePersonPage,
     frAssuredDetailsPage,
   }) => {
+    // เข้าสู่ระบบด้วย AE User
     await page.goto(configuration.appSettings.BASE_URL);
     await msLoginLogoutPage.login(
         configuration.users.userAE.email,
         configuration.users.userAE.password
     );
+    // ไปที่หน้าใบเสนอราคา
     await homePage.accessQuotation();
+    // สร้างใบเสนอราคา FR จากเมนูหลัก
     await quotationPage.createFRQuotationFromMainMenu();
+    // เลือก Sub-Class FR
     await quotationSubClassPage.selectFireInsurance();
+    // เลือก Risk Code จากรหัส 1 รายการ
     await frCategoryPage.searchRiskCodeBy1Code();
+    // กดปุ่ม "ถัดไป" ในหน้าผู้รับผิดชอบ
     await frResponsiblePersonPage.nextPage();
+    // ตรวจสอบการแสดงผลของชื่อและนามสกุล เมื่อเลือกคำนำหน้าเป็นแบบนิติบุคคล
     await frAssuredDetailsPage.validateJuristicPersonType();
   });
 
@@ -368,16 +435,23 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     frResponsiblePersonPage,
     frAssuredDetailsPage,
   }) => {
+    // เข้าสู่ระบบด้วย AE User
     await page.goto(configuration.appSettings.BASE_URL);
     await msLoginLogoutPage.login(
         configuration.users.userAE.email,
         configuration.users.userAE.password
     );
+    // ไปที่หน้าใบเสนอราคา
     await homePage.accessQuotation();
+    // สร้างใบเสนอราคา FR จากเมนูหลัก
     await quotationPage.createFRQuotationFromMainMenu();
+    // เลือก Sub-Class FR
     await quotationSubClassPage.selectFireInsurance();
+    // เลือก Risk Code จากรหัส 1 รายการ
     await frCategoryPage.searchRiskCodeBy1Code();
+    // กดปุ่ม "ถัดไป" ในหน้าผู้รับผิดชอบ
     await frResponsiblePersonPage.nextPage();
+    // ใส่คำนำหน้าชื่อเป็นแบบนิติบุคคล และตรวจสอบช่องระบุชื่อและประเภทนิติบุคคลหากไม่ใส่ข้อมูลลงไป
     await frAssuredDetailsPage.fillJustNameTitleForJuristicPerson();
   });
 
@@ -392,16 +466,23 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     frResponsiblePersonPage,
     frAssuredDetailsPage,
   }) => {
+    // เข้าสู่ระบบด้วย AE User
     await page.goto(configuration.appSettings.BASE_URL);
     await msLoginLogoutPage.login(
         configuration.users.userAE.email,
         configuration.users.userAE.password
     );
+    // ไปที่หน้าใบเสนอราคา
     await homePage.accessQuotation();
+    // สร้างใบเสนอราคา FR จากเมนูหลัก
     await quotationPage.createFRQuotationFromMainMenu();
+    // เลือก Sub-Class FR
     await quotationSubClassPage.selectFireInsurance();
+    // เลือก Risk Code จากรหัส 1 รายการ
     await frCategoryPage.searchRiskCodeBy1Code();
+    // กดปุ่ม "ถัดไป" ในหน้าผู้รับผิดชอบ
     await frResponsiblePersonPage.nextPage();
+    // ใส่อีเมลที่ไม่ถูก Format เพื่อตรวจสอบการ Validate
     await frAssuredDetailsPage.validateInvalidEmail();
   });
 
@@ -416,16 +497,23 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     frResponsiblePersonPage,
     frAssuredDetailsPage,
   }) => {
+    // เข้าสู่ระบบด้วย AE User
     await page.goto(configuration.appSettings.BASE_URL);
     await msLoginLogoutPage.login(
         configuration.users.userAE.email,
         configuration.users.userAE.password
     );
+    // ไปที่หน้าใบเสนอราคา
     await homePage.accessQuotation();
+    // สร้างใบเสนอราคา FR จากเมนูหลัก
     await quotationPage.createFRQuotationFromMainMenu();
+    // เลือก Sub-Class FR
     await quotationSubClassPage.selectFireInsurance();
+    // เลือก Risk Code จากรหัส 1 รายการ
     await frCategoryPage.searchRiskCodeBy1Code();
+    // กดปุ่ม "ถัดไป" ในหน้าผู้รับผิดชอบ
     await frResponsiblePersonPage.nextPage();
+    // ใส่เบอร์โทรศัพท์ที่ไม่ถูก Format เพื่อตรวจสอบการ Validate
     await frAssuredDetailsPage.validatePhoneNumber();
   });
 
@@ -440,16 +528,23 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     frResponsiblePersonPage,
     frAssuredDetailsPage,
   }) => {
+    // เข้าสู่ระบบด้วย AE User
     await page.goto(configuration.appSettings.BASE_URL);
     await msLoginLogoutPage.login(
         configuration.users.userAE.email,
         configuration.users.userAE.password
     );
+    // ไปที่หน้าใบเสนอราคา
     await homePage.accessQuotation();
+    // สร้างใบเสนอราคา FR จากเมนูหลัก
     await quotationPage.createFRQuotationFromMainMenu();
+    // เลือก Sub-Class FR
     await quotationSubClassPage.selectFireInsurance();
+    // เลือก Risk Code จากรหัส 1 รายการ
     await frCategoryPage.searchRiskCodeBy1Code();
+    // กดปุ่ม "ถัดไป" ในหน้าผู้รับผิดชอบ
     await frResponsiblePersonPage.nextPage();
+    // ค้นหาข้อมูลที่อยู่ตาม Keyword ที่ต้องการและเลือกข้อมูลที่อยู่ตามตัวกรอง
     await frAssuredDetailsPage.addressSearchByKeyword();
   });
 
@@ -464,45 +559,27 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     frResponsiblePersonPage,
     frAssuredDetailsPage,
   }) => {
+    // เข้าสู่ระบบด้วย AE User
     await page.goto(configuration.appSettings.BASE_URL);
     await msLoginLogoutPage.login(
         configuration.users.userAE.email,
         configuration.users.userAE.password
     );
+    // ไปที่หน้าใบเสนอราคา
     await homePage.accessQuotation();
+    // สร้างใบเสนอราคา FR จากเมนูหลัก
     await quotationPage.createFRQuotationFromMainMenu();
+    // เลือก Sub-Class FR
     await quotationSubClassPage.selectFireInsurance();
+    // เลือก Risk Code จากรหัส 1 รายการ
     await frCategoryPage.searchRiskCodeBy1Code();
+    // กดปุ่ม "ถัดไป" ในหน้าผู้รับผิดชอบ
     await frResponsiblePersonPage.nextPage();
+    // กรอกข้อมูลผู้เอาประกันภัยแบบบุคคลและข้อมูลที่อยู่ผู้เอาประกันภัย
     await frAssuredDetailsPage.fillNaturalPersonForm();
     await frAssuredDetailsPage.fillAddressForm();
+    // ตรวจสอบว่าข้อมูลที่อยู่ของผู้เอาประกันภัย ถูกนำไปใช้เป็นข้อมูลที่อยู่ของสถานที่ตั้งหรือเก็บทรัพย์สินเอาประกันภัย
     await expect(page.getByText('เลขที่ 123/45, หมู่บ้านทดสอบ, หมู่ 2, ซอย ทดสอบซอย, ถนน ทดสอบถนน, ตำบล/แขวง คลองตัน, อำเภอ/เขต คลองเตย, จังหวัด กรุงเทพมหานคร, 10110').nth(1)).toBeVisible();
-  });
-
-  test('สามารถแก้ไขที่อยู่ของสถานที่ตั้งหรือเก็บทรัพย์สินเอาประกันภัย โดยมีข้อมูลเดิม default ขึ้นมาให้แก้ไข', async ({
-    page,
-    configuration,
-    msLoginLogoutPage,
-    homePage,
-    quotationPage,
-    quotationSubClassPage,
-    frCategoryPage,
-    frResponsiblePersonPage,
-    frAssuredDetailsPage,
-  }) => {
-    await page.goto(configuration.appSettings.BASE_URL);
-    await msLoginLogoutPage.login(
-        configuration.users.userAE.email,
-        configuration.users.userAE.password
-    );
-    await homePage.accessQuotation();
-    await quotationPage.createFRQuotationFromMainMenu();
-    await quotationSubClassPage.selectFireInsurance();
-    await frCategoryPage.searchRiskCodeBy1Code();
-    await frResponsiblePersonPage.nextPage();
-    await frAssuredDetailsPage.fillNaturalPersonForm();
-    await frAssuredDetailsPage.fillAddressForm();
-    await frAssuredDetailsPage.editInsuredAddress();
   });
 
   test('สามารถแก้ไขที่อยู่ผู้เอาประกันภัยได้ โดยมีข้อมูลเดิม default ขึ้นมาให้แก้ไข', async ({
@@ -516,22 +593,64 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     frResponsiblePersonPage,
     frAssuredDetailsPage,
   }) => {
+    // เข้าสู่ระบบด้วย AE User
     await page.goto(configuration.appSettings.BASE_URL);
     await msLoginLogoutPage.login(
         configuration.users.userAE.email,
         configuration.users.userAE.password
     );
+    // ไปที่หน้าใบเสนอราคา
     await homePage.accessQuotation();
+    // สร้างใบเสนอราคา FR จากเมนูหลัก
     await quotationPage.createFRQuotationFromMainMenu();
+    // เลือก Sub-Class FR
     await quotationSubClassPage.selectFireInsurance();
+    // เลือก Risk Code จากรหัส 1 รายการ
     await frCategoryPage.searchRiskCodeBy1Code();
+    // กดปุ่ม "ถัดไป" ในหน้าผู้รับผิดชอบ
     await frResponsiblePersonPage.nextPage();
+    // กรอกข้อมูลผู้เอาประกันภัยแบบบุคคลและข้อมูลที่อยู่ผู้เอาประกันภัย
     await frAssuredDetailsPage.fillNaturalPersonForm();
     await frAssuredDetailsPage.fillAddressForm();
+    // แก้ไขที่อยู่ผู้เอาประกันภัย
+    await frAssuredDetailsPage.editInsuredAddress();
+  });
+
+  test('สามารถแก้ไขที่อยู่ของสถานที่ตั้งหรือเก็บทรัพย์สินเอาประกันภัย โดยมีข้อมูลเดิม default ขึ้นมาให้แก้ไข', async ({
+    page,
+    configuration,
+    msLoginLogoutPage,
+    homePage,
+    quotationPage,
+    quotationSubClassPage,
+    frCategoryPage,
+    frResponsiblePersonPage,
+    frAssuredDetailsPage,
+  }) => {
+    // เข้าสู่ระบบด้วย AE User
+    await page.goto(configuration.appSettings.BASE_URL);
+    await msLoginLogoutPage.login(
+        configuration.users.userAE.email,
+        configuration.users.userAE.password
+    );
+    // ไปที่หน้าใบเสนอราคา
+    await homePage.accessQuotation();
+    // สร้างใบเสนอราคา FR จากเมนูหลัก
+    await quotationPage.createFRQuotationFromMainMenu();
+    // เลือก Sub-Class FR
+    await quotationSubClassPage.selectFireInsurance();
+    // เลือก Risk Code จากรหัส 1 รายการ
+    await frCategoryPage.searchRiskCodeBy1Code();
+    // กดปุ่ม "ถัดไป" ในหน้าผู้รับผิดชอบ
+    await frResponsiblePersonPage.nextPage();
+    // กรอกข้อมูลผู้เอาประกันภัยแบบบุคคลและข้อมูลที่อยู่ผู้เอาประกันภัย
+    await frAssuredDetailsPage.fillNaturalPersonForm();
+    await frAssuredDetailsPage.fillAddressForm();
+    // แก้ไขที่อยู่ของสถานที่ตั้งหรือเก็บทรัพย์สินเอาประกันภัย
     await frAssuredDetailsPage.editInsuredLocation();
   });
 
-  test.only('สามารถลบที่อยู่ผู้เอาประกันภัยได้', async ({
+  test('สามารถลบที่อยู่ผู้เอาประกันภัยได้', async ({
     page,
     configuration,
     msLoginLogoutPage,
