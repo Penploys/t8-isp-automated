@@ -252,4 +252,28 @@ export class FRAssuredDetailsPage {
     await this.addressSubDetails.click();
     await expect(this.addressDetails).toHaveValue(/ระนอง, กะเปอร์/);
   }
+
+  //กรอกข้อมูลที่อยู่ของผู้เอาประกันภัย และนำไปใช้กับสถานที่เอาประกันภัย
+  async fillAddressFormWithDangerousArea() {
+    await this.openAddressForm.scrollIntoViewIfNeeded();
+    await this.openAddressForm.click();
+    await this.addressDetails.click();
+
+    test.setTimeout(0);
+    await this.page.pause();
+    await this.addressDetails.pressSequentially('รองเมือง, ', { delay: 100 });
+    await this.page.waitForTimeout(200);
+    await this.addressSubDetails.click();
+
+    await this.houseNumber.fill('123/45');
+    await this.addressLine.fill('หมู่บ้านทดสอบ');
+    await this.addressMoo.fill('2');
+    await this.addressSoi.fill('ทดสอบซอย');
+    await this.addressRoad.fill('ทดสอบถนน');
+    
+    await this.applyAddress.click();
+    await this.confirmButton.click();
+
+    await expect(this.page.getByText('กรุณาระบุพื้นที่อันตราย')).toBeVisible();
+  }
 }
