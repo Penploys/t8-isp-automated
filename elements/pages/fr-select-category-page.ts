@@ -69,6 +69,7 @@ export class FRCategoryPage {
     // ดึงรหัสจาก configuration โดยเลือกเฉพาะ 4 ตัวแรก
     const firstCode = this.riskcodeCategories[firstIndex].substring(0, 4); // จะได้ '1032'
     await this.searchRiskCode.fill(firstCode);
+    console.log('ใส่ Risk Code:', firstIndex);
     await this.page.waitForTimeout(500);
     const grid = this.page.locator(".ReactVirtualized__Grid");
     const resultInput = grid.locator(`.MuiBox-root:has-text("${firstCode}")`)
@@ -86,6 +87,7 @@ export class FRCategoryPage {
     const firstCode = this.riskcodeCategories[firstIndex].substring(0, 4); // จะได้ '1032'
     const secondCode = this.riskcodeCategories[secondIndex].substring(0, 4); // จะได้ '1074'
     await this.searchRiskCode.fill(firstCode);
+    console.log('ใส่ Risk Code:', firstIndex);
     await this.page.waitForTimeout(500);
     const grid = this.page.locator(".ReactVirtualized__Grid");
     const resultInput1 = grid.locator(`.MuiBox-root:has-text("${firstCode}")`)
@@ -96,6 +98,7 @@ export class FRCategoryPage {
     await this.page.waitForTimeout(500);
 
     await this.searchRiskCode.fill(secondCode);
+    console.log('ใส่ Risk Code:', secondIndex);
     await this.page.waitForTimeout(500);
     const resultInput2 = grid.locator(`.MuiBox-root:has-text("${secondCode}")`)
     await expect(resultInput2.first()).toBeVisible();
