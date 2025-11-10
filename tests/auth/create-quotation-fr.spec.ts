@@ -218,7 +218,7 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     await frCategoryPage.searchRiskCodeByNameOrCode();
   });
 
-  test.only('ผู้ใช้งานสามารถทำการเลือก Risk Code โดยการกดเลือกได้ 1 Risk Code', async ({
+  test('ผู้ใช้งานสามารถทำการเลือก Risk Code โดยการกดเลือกได้ 1 Risk Code', async ({
     page,
     configuration,
     msLoginLogoutPage,
@@ -243,7 +243,7 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     await frCategoryPage.searchRiskCodeBy1Code();
   });
 
-  test.only('ผู้ใช้งานสามารถทำการเลือก Risk Code ได้มากกว่า 1 Risk Code', async ({
+  test('ผู้ใช้งานสามารถทำการเลือก Risk Code ได้มากกว่า 1 Risk Code', async ({
     page,
     configuration,
     msLoginLogoutPage,
@@ -682,5 +682,39 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     await frAssuredDetailsPage.fillAddressForm();
     // ลบที่อยู่ผู้เอาประกันภัย (เนื่องจากหน้าเว็บไม่ได้กำหนด id หรือชื่อเฉพาะของปุ่มถังขยะ จึงใช้วิธีลบที่อยู่รายการแรก)
     await frAssuredDetailsPage.deleteAddress(0);
+  });
+
+  test('สามารถลบที่อยู่ของสถานที่ตั้งหรือเก็บทรัพย์สินเอาประกันภัยได้', async ({
+    page,
+    configuration,
+    msLoginLogoutPage,
+    homePage,
+    quotationPage,
+    quotationSubClassPage,
+    frCategoryPage,
+    frResponsiblePersonPage,
+    frAssuredDetailsPage,
+  }) => {
+    // เข้าสู่ระบบด้วย AE User
+    await page.goto(configuration.appSettings.BASE_URL);
+    await msLoginLogoutPage.login(
+        configuration.users.userAE.email,
+        configuration.users.userAE.password
+    );
+    // ไปที่หน้าใบเสนอราคา
+    await homePage.accessQuotation();
+    // สร้างใบเสนอราคา FR จากเมนูหลัก
+    await quotationPage.createFRQuotationFromMainMenu();
+    // เลือก Sub-Class FR
+    await quotationSubClassPage.selectFireInsurance();
+    // เลือก Risk Code จากรหัส 1 รายการ
+    await frCategoryPage.searchRiskCodeBy1Code();
+    // กดปุ่ม "ถัดไป" ในหน้าผู้รับผิดชอบ
+    await frResponsiblePersonPage.nextPage();
+    // กรอกข้อมูลผู้เอาประกันภัยแบบบุคคลและข้อมูลที่อยู่ผู้เอาประกันภัย
+    await frAssuredDetailsPage.fillNaturalPersonForm();
+    await frAssuredDetailsPage.fillAddressForm();
+    // ลบที่อยู่ผู้เอาประกันภัย (เนื่องจากหน้าเว็บไม่ได้กำหนด id หรือชื่อเฉพาะของปุ่มถังขยะ จึงใช้วิธีลบที่อยู่รายการแรก)
+    await frAssuredDetailsPage.deleteAddress(1);
   });
 });
