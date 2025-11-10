@@ -4,16 +4,16 @@ import { Configuration } from "../../configurations/configuration";
 export class FRCategoryPage {
   readonly page: Page;
   readonly categories: string[];
-  readonly riskcodeCategories: string[];
   readonly searchRiskCode: Locator;
   readonly fireInsuranceCategoryCheckbox: Locator;
   readonly nextButton: Locator;
   readonly backButton: Locator;
+  private readonly configuration: Configuration;
 
   constructor(page: Page, configuration: Configuration) {
     this.page = page;
     this.categories = configuration.categories;
-    this.riskcodeCategories = configuration.riskcodeCategories;
+    this.configuration = configuration;
 
     this.searchRiskCode = page.getByRole('textbox', { name: "ค้นหา" });
     this.fireInsuranceCategoryCheckbox = page
@@ -22,6 +22,12 @@ export class FRCategoryPage {
     this.nextButton = page.getByRole("button", { name: "ถัดไป" });
     this.backButton = page.getByRole("button", { name: "ย้อนกลับ" });
   }
+
+    /**
+   * เลือกหมวดหมู่ประกันอัคคีภัยตาม Risk Code และชื่อที่ระบุ
+   * @param code - Risk Code ที่ต้องการเลือก
+   * @param name - ชื่อของ Risk Code ที่ต้องการเลือก
+   */
 
   //เลือก Checkbox อันแรกเสมอ เพราะจะใช้การตรวจสอบโดยการพิมพ์ชื่อหรือหมายเลขของ Risk Code ก่อนเพื่อกันการให้ Script Scroll หาจน Timeout
   async selectCheckbox() {
@@ -63,47 +69,44 @@ export class FRCategoryPage {
   }
 
   //ค้นหาหมายเลข Risk Code แล้วเลือกแค่ Risk Code เดียว
-  async searchRiskCodeBy1Code() {
-    // ค้นหา index ของรหัสที่ต้องการ
-    const firstIndex = this.riskcodeCategories.findIndex(code => code.startsWith('1032'));
-    // ดึงรหัสจาก configuration โดยเลือกเฉพาะ 4 ตัวแรก
-    const firstCode = this.riskcodeCategories[firstIndex].substring(0, 4); // จะได้ '1032'
-    await this.searchRiskCode.fill(firstCode);
-    // Log ทั้ง index และ text เต็ม
-    console.log(`Risk Code = ${this.riskcodeCategories[firstIndex]}, index=${firstIndex}`);
+  async searchRiskCodeBy1Code(code: string) {
+    const list = Object.values(this.configuration.riskCodes as any).map((i: any) => `${i.code} - ${i.name}`);
+    const idx = list.findIndex((s: string) => s.startsWith(code));
+    console.log(`Risk Code = ${list[idx] ?? 'NOT FOUND'})`);
+
+    await this.searchRiskCode.fill(code);
     await this.page.waitForTimeout(500);
     const grid = this.page.locator(".ReactVirtualized__Grid");
-    const resultInput = grid.locator(`.MuiBox-root:has-text("${firstCode}")`)
+    const resultInput = grid.locator(`.MuiBox-root:has-text("${code}")`)
     await expect(resultInput.first()).toBeVisible();
     await this.selectCheckbox();
     await this.nextPage();
   }
 
   //ค้นหาหมายเลข Risk Code แล้วเลือก 2 Risk Code
-  async searchRiskCodeBy2Codes() {
-    // ค้นหา index ของรหัสที่ต้องการ
-    const firstIndex = this.riskcodeCategories.findIndex(code => code.startsWith('1032'));
-    const secondIndex = this.riskcodeCategories.findIndex(code => code.startsWith('1074'));
-    // ดึงรหัสจาก configuration โดยเลือกเฉพาะ 4 ตัวแรก
-    const firstCode = this.riskcodeCategories[firstIndex].substring(0, 4); // จะได้ '1032'
-    const secondCode = this.riskcodeCategories[secondIndex].substring(0, 4); // จะได้ '1074'
-    await this.searchRiskCode.fill(firstCode);
-    // Log ทั้ง index และ text เต็ม
-    console.log(`Risk Code = ${this.riskcodeCategories[firstIndex]}, index=${firstIndex}`);
+  async searchRiskCodeBy2Codes(code1: string, code2: string) {
+    // สร้าง array จาก configuration.riskCodes เพื่อหาหมายเลขและชื่อของ risk code
+    const list = Object.values(this.configuration.riskCodes as any).map((i: any) => `${i.code} - ${i.name}`);
+    const idx1 = list.findIndex((s: string) => s.startsWith(code1));
+    const idx2 = list.findIndex((s: string) => s.startsWith(code2));
+    console.log(`Risk Code 1 = ${list[idx1] ?? 'NOT FOUND'})`);
+    console.log(`Risk Code 2 = ${list[idx2] ?? 'NOT FOUND'})`);
+
+    // เลือกตัวแรก
+    await this.searchRiskCode.fill(code1);
     await this.page.waitForTimeout(500);
     const grid = this.page.locator(".ReactVirtualized__Grid");
-    const resultInput1 = grid.locator(`.MuiBox-root:has-text("${firstCode}")`)
+    const resultInput1 = grid.locator(`.MuiBox-root:has-text("${code1}")`)
     await expect(resultInput1.first()).toBeVisible();
     await this.selectCheckbox();
 
+    // เคลียร์และค้นหาอีกครั้งเพื่อเลือกตัวที่สอง
     await this.searchRiskCode.fill('');
     await this.page.waitForTimeout(500);
 
-    await this.searchRiskCode.fill(secondCode);
-    // Log ทั้ง index และ text เต็ม
-    console.log(`Risk Code = ${this.riskcodeCategories[secondIndex]}, index=${secondIndex}`);
+    await this.searchRiskCode.fill(code2);
     await this.page.waitForTimeout(500);
-    const resultInput2 = grid.locator(`.MuiBox-root:has-text("${secondCode}")`)
+    const resultInput2 = grid.locator(`.MuiBox-root:has-text("${code2}")`)
     await expect(resultInput2.first()).toBeVisible();
     await this.selectCheckbox();
 

@@ -240,7 +240,9 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     // เลือก Sub-Class FR
     await quotationSubClassPage.selectFireInsurance();
     // เลือก Risk Code จากรหัส 1 รายการ
-    await frCategoryPage.searchRiskCodeBy1Code();
+    await frCategoryPage.searchRiskCodeBy1Code(
+        configuration.riskCodes.riskcode1032.code
+    );
   });
 
   test('ผู้ใช้งานสามารถทำการเลือก Risk Code ได้มากกว่า 1 Risk Code', async ({
@@ -265,7 +267,10 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     // เลือก Sub-Class FR
     await quotationSubClassPage.selectFireInsurance();
     // เลือก Risk Code จากรหัส 2 รายการ
-    await frCategoryPage.searchRiskCodeBy2Codes();
+    await frCategoryPage.searchRiskCodeBy2Codes(
+        configuration.riskCodes.riskcode1032.code,
+        configuration.riskCodes.riskcode1074.code
+    );
   });
 
   test('User เลือก Single Risk Code ประเภท House', async ({
@@ -293,7 +298,9 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     // เลือก Sub-Class FR
     await quotationSubClassPage.selectFireInsurance();
     // เลือก Risk Code ประเภท House 1 รายการ
-    await frCategoryPage.searchRiskCodeBy1Code();
+    await frCategoryPage.searchRiskCodeBy1Code(
+        configuration.riskCodes.riskcode1032.code
+    );
     // กดปุ่ม "ถัดไป" ในหน้าผู้รับผิดชอบ
     await frResponsiblePersonPage.nextPage();
     // กรอกข้อมูลผู้เอาประกันภัยแบบบุคคลและข้อมูลที่อยู่ผู้เอาประกันภัย แล้วไปหน้ารายละเอียดความคุ้มครอง
@@ -326,7 +333,9 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     // เลือก Sub-Class FR
     await quotationSubClassPage.selectFireInsurance();
     // เลือก Risk Code จากรหัส 1 รายการ
-    await frCategoryPage.searchRiskCodeBy1Code();
+    await frCategoryPage.searchRiskCodeBy1Code(
+        configuration.riskCodes.riskcode1032.code
+    );
     // ย้อนกลับไปที่หน้าเลือก Risk Code และตรวจสอบว่า Checkbox ที่เลือกไว้ยังคงถูกเลือกอยู่
     await frCategoryPage.backPageAndValidateCheckedBox();
   });
@@ -355,7 +364,9 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     // เลือก Sub-Class FR
     await quotationSubClassPage.selectFireInsurance();
     // เลือก Risk Code จากรหัส 1 รายการ
-    await frCategoryPage.searchRiskCodeBy1Code();
+    await frCategoryPage.searchRiskCodeBy1Code(
+        configuration.riskCodes.riskcode1032.code
+    );
     // กดปุ่ม "ถัดไป" ในหน้าผู้รับผิดชอบ
     await frResponsiblePersonPage.nextPage();
     // ตรวจสอบการแสดงผลของชื่อและนามสกุล เมื่อเลือกคำนำหน้าเป็นแบบรายบุคคล
@@ -386,7 +397,9 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     // เลือก Sub-Class FR
     await quotationSubClassPage.selectFireInsurance();
     // เลือก Risk Code จากรหัส 1 รายการ
-    await frCategoryPage.searchRiskCodeBy1Code();
+    await frCategoryPage.searchRiskCodeBy1Code(
+        configuration.riskCodes.riskcode1032.code
+    );
     // กดปุ่ม "ถัดไป" ในหน้าผู้รับผิดชอบ
     await frResponsiblePersonPage.nextPage();
     // ใส่คำนำหน้าชื่อเป็นแบบรายบุคคล และตรวจสอบช่องระบุชื่อและนามสกุลหากไม่ใส่ข้อมูลลงไป
@@ -417,7 +430,9 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     // เลือก Sub-Class FR
     await quotationSubClassPage.selectFireInsurance();
     // เลือก Risk Code จากรหัส 1 รายการ
-    await frCategoryPage.searchRiskCodeBy1Code();
+    await frCategoryPage.searchRiskCodeBy1Code(
+        configuration.riskCodes.riskcode1032.code
+    );
     // กดปุ่ม "ถัดไป" ในหน้าผู้รับผิดชอบ
     await frResponsiblePersonPage.nextPage();
     // ตรวจสอบการแสดงผลของชื่อและนามสกุล เมื่อเลือกคำนำหน้าเป็นแบบนิติบุคคล
@@ -448,7 +463,9 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     // เลือก Sub-Class FR
     await quotationSubClassPage.selectFireInsurance();
     // เลือก Risk Code จากรหัส 1 รายการ
-    await frCategoryPage.searchRiskCodeBy1Code();
+    await frCategoryPage.searchRiskCodeBy1Code(
+        configuration.riskCodes.riskcode1032.code
+    );
     // กดปุ่ม "ถัดไป" ในหน้าผู้รับผิดชอบ
     await frResponsiblePersonPage.nextPage();
     // ใส่คำนำหน้าชื่อเป็นแบบนิติบุคคล และตรวจสอบช่องระบุชื่อและประเภทนิติบุคคลหากไม่ใส่ข้อมูลลงไป
@@ -479,7 +496,9 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     // เลือก Sub-Class FR
     await quotationSubClassPage.selectFireInsurance();
     // เลือก Risk Code จากรหัส 1 รายการ
-    await frCategoryPage.searchRiskCodeBy1Code();
+    await frCategoryPage.searchRiskCodeBy1Code(
+        configuration.riskCodes.riskcode1032.code
+    );
     // กดปุ่ม "ถัดไป" ในหน้าผู้รับผิดชอบ
     await frResponsiblePersonPage.nextPage();
     // ใส่อีเมลที่ไม่ถูก Format เพื่อตรวจสอบการ Validate
@@ -510,7 +529,9 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     // เลือก Sub-Class FR
     await quotationSubClassPage.selectFireInsurance();
     // เลือก Risk Code จากรหัส 1 รายการ
-    await frCategoryPage.searchRiskCodeBy1Code();
+    await frCategoryPage.searchRiskCodeBy1Code(
+        configuration.riskCodes.riskcode1032.code
+    );
     // กดปุ่ม "ถัดไป" ในหน้าผู้รับผิดชอบ
     await frResponsiblePersonPage.nextPage();
     // ใส่เบอร์โทรศัพท์ที่ไม่ถูก Format เพื่อตรวจสอบการ Validate
@@ -541,7 +562,9 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     // เลือก Sub-Class FR
     await quotationSubClassPage.selectFireInsurance();
     // เลือก Risk Code จากรหัส 1 รายการ
-    await frCategoryPage.searchRiskCodeBy1Code();
+    await frCategoryPage.searchRiskCodeBy1Code(
+        configuration.riskCodes.riskcode1032.code
+    );
     // กดปุ่ม "ถัดไป" ในหน้าผู้รับผิดชอบ
     await frResponsiblePersonPage.nextPage();
     // ค้นหาข้อมูลที่อยู่ตาม Keyword ที่ต้องการและเลือกข้อมูลที่อยู่ตามตัวกรอง
@@ -572,7 +595,9 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     // เลือก Sub-Class FR
     await quotationSubClassPage.selectFireInsurance();
     // เลือก Risk Code จากรหัส 1 รายการ
-    await frCategoryPage.searchRiskCodeBy1Code();
+    await frCategoryPage.searchRiskCodeBy1Code(
+        configuration.riskCodes.riskcode1032.code
+    );
     // กดปุ่ม "ถัดไป" ในหน้าผู้รับผิดชอบ
     await frResponsiblePersonPage.nextPage();
     // กรอกข้อมูลผู้เอาประกันภัยแบบบุคคลและข้อมูลที่อยู่ผู้เอาประกันภัย
@@ -606,7 +631,9 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     // เลือก Sub-Class FR
     await quotationSubClassPage.selectFireInsurance();
     // เลือก Risk Code จากรหัส 1 รายการ
-    await frCategoryPage.searchRiskCodeBy1Code();
+    await frCategoryPage.searchRiskCodeBy1Code(
+        configuration.riskCodes.riskcode1032.code
+    );
     // กดปุ่ม "ถัดไป" ในหน้าผู้รับผิดชอบ
     await frResponsiblePersonPage.nextPage();
     // กรอกข้อมูลผู้เอาประกันภัยแบบบุคคลและข้อมูลที่อยู่ผู้เอาประกันภัย
@@ -640,7 +667,9 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     // เลือก Sub-Class FR
     await quotationSubClassPage.selectFireInsurance();
     // เลือก Risk Code จากรหัส 1 รายการ
-    await frCategoryPage.searchRiskCodeBy1Code();
+    await frCategoryPage.searchRiskCodeBy1Code(
+        configuration.riskCodes.riskcode1032.code
+    );
     // กดปุ่ม "ถัดไป" ในหน้าผู้รับผิดชอบ
     await frResponsiblePersonPage.nextPage();
     // กรอกข้อมูลผู้เอาประกันภัยแบบบุคคลและข้อมูลที่อยู่ผู้เอาประกันภัย
@@ -674,7 +703,9 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     // เลือก Sub-Class FR
     await quotationSubClassPage.selectFireInsurance();
     // เลือก Risk Code จากรหัส 1 รายการ
-    await frCategoryPage.searchRiskCodeBy1Code();
+    await frCategoryPage.searchRiskCodeBy1Code(
+        configuration.riskCodes.riskcode1032.code
+    );
     // กดปุ่ม "ถัดไป" ในหน้าผู้รับผิดชอบ
     await frResponsiblePersonPage.nextPage();
     // กรอกข้อมูลผู้เอาประกันภัยแบบบุคคลและข้อมูลที่อยู่ผู้เอาประกันภัย
@@ -708,7 +739,9 @@ test.describe('ระบบสามารถสร้างใบเสนอ�
     // เลือก Sub-Class FR
     await quotationSubClassPage.selectFireInsurance();
     // เลือก Risk Code จากรหัส 1 รายการ
-    await frCategoryPage.searchRiskCodeBy1Code();
+    await frCategoryPage.searchRiskCodeBy1Code(
+        configuration.riskCodes.riskcode1032.code
+    );
     // กดปุ่ม "ถัดไป" ในหน้าผู้รับผิดชอบ
     await frResponsiblePersonPage.nextPage();
     // กรอกข้อมูลผู้เอาประกันภัยแบบบุคคลและข้อมูลที่อยู่ผู้เอาประกันภัย
