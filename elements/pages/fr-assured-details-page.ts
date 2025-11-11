@@ -1,4 +1,5 @@
 import { Page, Locator, test, expect } from "@playwright/test";
+import { text } from "stream/consumers";
 
 export class FRAssuredDetailsPage {
   readonly page: Page;
@@ -18,6 +19,8 @@ export class FRAssuredDetailsPage {
   readonly openLocationForm: Locator;
   readonly addressDetails: Locator;
   readonly addressSubDetails: Locator;
+  readonly dangerousAreaField: Locator;
+  readonly dangerousAreaOption: Locator;
   readonly houseNumber: Locator;
   readonly addressLine: Locator;
   readonly addressMoo: Locator;
@@ -49,6 +52,8 @@ export class FRAssuredDetailsPage {
     this.openLocationForm = page.getByRole("button", { name: "กรอกที่ตั้ง" });
     this.addressDetails = page.locator('input[id="address.region"]');
     this.addressSubDetails = page.getByRole('option').first();
+    this.dangerousAreaField = page.locator('[id="mui-component-select-address.dangerousArea.id"]');
+    this.dangerousAreaOption = page.getByRole('option').nth(1);
     this.houseNumber = page.locator('input[id="address.houseNumber"]');
     this.addressLine = page.locator('input[id="address.addressLine"]');
     this.addressMoo = page.locator('input[id="address.moo"]');
@@ -98,11 +103,11 @@ export class FRAssuredDetailsPage {
       await this.addressSubDetails.click();
     };
 
-    await this.houseNumber.fill('123/45');
-    await this.addressLine.fill('หมู่บ้านทดสอบ');
-    await this.addressMoo.fill('2');
-    await this.addressSoi.fill('ทดสอบซอย');
-    await this.addressRoad.fill('ทดสอบถนน');
+    await this.houseNumber.fill('89/12');
+    await this.addressLine.fill('หมู่บ้านศิริกานต์');
+    await this.addressMoo.fill('5');
+    await this.addressSoi.fill('สุขุมวิท 64');
+    await this.addressRoad.fill('ถนนบางนา-ตราด');
     
     await this.applyAddress.click();
     await this.confirmButton.click();
@@ -118,13 +123,13 @@ export class FRAssuredDetailsPage {
       await this.addressSubDetails.click();
     };
 
-    await this.houseNumber.fill('123/45');
-    await this.addressLine.fill('หมู่บ้านทดสอบ');
-    await this.addressMoo.fill('2');
-    await this.addressSoi.fill('ทดสอบซอย');
-    await this.addressRoad.fill('ทดสอบถนน');
-    await this.landCode.fill('123');
-    await this.buildingName.fill('อาคารทดสอบ');
+    await this.houseNumber.fill('89/12');
+    await this.addressLine.fill('หมู่บ้านศิริกานต์');
+    await this.addressMoo.fill('5');
+    await this.addressSoi.fill('สุขุมวิท 64');
+    await this.addressRoad.fill('ถนนบางนา-ตราด');
+    await this.landCode.fill('10452');
+    await this.buildingName.fill('อาคารเมโทรทาวน์');
     
     await this.confirmButton.click();
   }
@@ -136,11 +141,11 @@ export class FRAssuredDetailsPage {
 
     //ตรวจสอบข้อมูลที่แสดงผลในช่องที่อยู่ก่อนแก้ไข
     await expect(this.addressDetails).toHaveValue('กรุงเทพมหานคร, คลองเตย, คลองตัน, 10110');
-    await expect(this.houseNumber).toHaveValue('123/45');
-    await expect(this.addressLine).toHaveValue('หมู่บ้านทดสอบ');
-    await expect(this.addressMoo).toHaveValue('2');
-    await expect(this.addressSoi).toHaveValue('ทดสอบซอย');
-    await expect(this.addressRoad).toHaveValue('ทดสอบถนน');
+    await expect(this.houseNumber).toHaveValue('89/12');
+    await expect(this.addressLine).toHaveValue('หมู่บ้านศิริกานต์');
+    await expect(this.addressMoo).toHaveValue('5');
+    await expect(this.addressSoi).toHaveValue('สุขุมวิท 64');
+    await expect(this.addressRoad).toHaveValue('ถนนบางนา-ตราด');
 
     //แก้ไขข้อมูลที่อยู่
     await this.houseNumber.fill('');
@@ -161,11 +166,11 @@ export class FRAssuredDetailsPage {
 
     //ตรวจสอบข้อมูลที่แสดงผลในช่องที่อยู่ก่อนแก้ไข
     await expect(this.addressDetails).toHaveValue('กรุงเทพมหานคร, คลองเตย, คลองตัน, 10110');
-    await expect(this.houseNumber).toHaveValue('123/45');
-    await expect(this.addressLine).toHaveValue('หมู่บ้านทดสอบ');
-    await expect(this.addressMoo).toHaveValue('2');
-    await expect(this.addressSoi).toHaveValue('ทดสอบซอย');
-    await expect(this.addressRoad).toHaveValue('ทดสอบถนน');
+    await expect(this.houseNumber).toHaveValue('89/12');
+    await expect(this.addressLine).toHaveValue('หมู่บ้านศิริกานต์');
+    await expect(this.addressMoo).toHaveValue('5');
+    await expect(this.addressSoi).toHaveValue('สุขุมวิท 64');
+    await expect(this.addressRoad).toHaveValue('ถนนบางนา-ตราด');
 
     //แก้ไขข้อมูลที่อยู่
     await this.houseNumber.fill('');
@@ -174,12 +179,12 @@ export class FRAssuredDetailsPage {
     await this.addressSoi.fill('');
     await this.addressRoad.fill('');
     //เพิ่มเลขที่โฉนด
-    await this.landCode.fill('123');
+    await this.landCode.fill('10452');
     
     await this.confirmButton.click();
 
     await expect(this.page.getByText('ตำบล/แขวง คลองตัน, อำเภอ/เขต คลองเตย, จังหวัด กรุงเทพมหานคร, 10110').nth(1)).toBeVisible();
-    await expect(this.page.getByText('เลขที่โฉนด : 123')).toBeVisible();
+    await expect(this.page.getByText('เลขที่โฉนด : 10452')).toBeVisible();
   }
 
   //กดปุ่มลบที่อยู่
@@ -285,12 +290,12 @@ export class FRAssuredDetailsPage {
     await this.addressDetails.pressSequentially('รองเมือง, ', { delay: 100 });
     await this.addressSubDetails.click();
 
-    await this.houseNumber.fill('123/45');
-    await this.addressLine.fill('หมู่บ้านทดสอบ');
-    await this.addressMoo.fill('2');
-    await this.addressSoi.fill('ทดสอบซอย');
-    await this.addressRoad.fill('ทดสอบถนน');
-    
+    await this.houseNumber.fill('89/65');
+    await this.addressLine.fill('หมู่บ้านศิริกานต์');
+    await this.addressMoo.fill('5');
+    await this.addressSoi.fill('สุขุมวิท 64');
+    await this.addressRoad.fill('ถนนบางนา-ตราด');
+
     await this.applyAddress.click();
     await this.confirmButton.click();
 
@@ -306,16 +311,45 @@ export class FRAssuredDetailsPage {
     await this.addressDetails.pressSequentially('รองเมือง, ', { delay: 100 });
     await this.addressSubDetails.click();
 
+    test.setTimeout(0);
+    await this.page.pause();
     await expect(this.page.getByText(/ระบบตรวจพบว่า[\s\S]*ที่อยู่ของคุณอยู่ในพื้นที่อันตราย/)).toBeVisible();
 
-    await this.houseNumber.fill('123/45');
-    await this.addressLine.fill('หมู่บ้านทดสอบ');
-    await this.addressMoo.fill('2');
-    await this.addressSoi.fill('ทดสอบซอย');
-    await this.addressRoad.fill('ทดสอบถนน');
-    await this.landCode.fill('123');
-    await this.buildingName.fill('อาคารทดสอบ');
+    await this.dangerousAreaField.click();
+    await this.dangerousAreaOption.click();
+
+    await this.houseNumber.fill('89/65');
+    await this.addressLine.fill('หมู่บ้านศิริกานต์');
+    await this.addressMoo.fill('5');
+    await this.addressSoi.fill('สุขุมวิท 64');
+    await this.addressRoad.fill('ถนนบางนา-ตราด');
+    await this.landCode.fill('10452');
+    await this.buildingName.fill('อาคารเมโทรทาวน์');
     
+    await this.confirmButton.click();
+
+    // ตรวจสอบว่ามีข้อความเกี่ยวกับ "พื้นที่อันตราย" และต้องไม่ใช่คำว่า "ไม่ใช่พื้นที่อันตราย"
+    const dangerLocator = this.page.locator(':text("พื้นที่อันตราย")').first();
+    await expect(dangerLocator).toBeVisible();
+    const dangerText = (await dangerLocator.innerText()).replace(/\s+/g, ' ').trim();
+    // ดึงข้อความหลัง ":" (ถ้ามี) มิฉะนั้นใช้ทั้งข้อความ
+    const m = dangerText.match(/พื้นที่อันตราย\s*:\s*(.+)$/);
+    const valueAfterColon = m ? m[1].trim() : '';
+    // ยืนยันว่าข้อความที่แสดงไม่ใช่ "ไม่ใช่พื้นที่อันตราย" และมีความยาวอย่างน้อย 1 ตัวอักษร
+    expect(valueAfterColon).not.toBe('ไม่ใช่พื้นที่อันตราย');
+    expect(dangerText.length).toBeGreaterThan(0);
+  }
+
+  async validateLocationFormWithDangerousArea() {
+    await this.openLocationForm.scrollIntoViewIfNeeded();
+    await this.openLocationForm.click();
+    await this.addressDetails.click();
+
+    await this.addressDetails.pressSequentially('รองเมือง, ', { delay: 100 });
+    await this.addressSubDetails.click();
+
+    await expect(this.page.getByText(/ระบบตรวจพบว่า[\s\S]*ที่อยู่ของคุณอยู่ในพื้นที่อันตราย/)).toBeVisible();
+
     await this.confirmButton.click();
 
     await expect(this.page.getByText('Invalid uuid')).toBeVisible();
