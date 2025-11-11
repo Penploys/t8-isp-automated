@@ -15,6 +15,7 @@ export class FRAssuredDetailsPage {
   readonly emailField: Locator;
   readonly phoneNumber: Locator;
   readonly openAddressForm: Locator;
+  readonly openLocationForm: Locator;
   readonly addressDetails: Locator;
   readonly addressSubDetails: Locator;
   readonly houseNumber: Locator;
@@ -23,6 +24,7 @@ export class FRAssuredDetailsPage {
   readonly addressSoi: Locator;
   readonly addressRoad: Locator;
   readonly landCode: Locator;
+  readonly buildingName: Locator;
   readonly applyAddress: Locator;
   readonly confirmButton: Locator;
   readonly editButton: Locator;
@@ -44,6 +46,7 @@ export class FRAssuredDetailsPage {
     this.emailField = page.locator('input[id="insureds.0.email"]');
     this.phoneNumber = page.locator('input[name="insureds.0.telephone"]')
     this.openAddressForm = page.getByRole("button", { name: "กรอกที่อยู่" });
+    this.openLocationForm = page.getByRole("button", { name: "กรอกที่ตั้ง" });
     this.addressDetails = page.locator('input[id="address.region"]');
     this.addressSubDetails = page.getByRole('option').first();
     this.houseNumber = page.locator('input[id="address.houseNumber"]');
@@ -52,6 +55,7 @@ export class FRAssuredDetailsPage {
     this.addressSoi = page.locator('input[id="address.soi"]');
     this.addressRoad = page.locator('input[id="address.road"]');
     this.landCode = page.locator('input[id="address.landCode"]');
+    this.buildingName = page.locator('input[id="address.buildings.0.name"]');
     this.applyAddress = page.locator('input[name="isApplyAddress"][type="checkbox"]');
     this.confirmButton = page.getByRole("button", { name: "ยืนยัน" });
     this.editButton = page.locator('button:has(svg g[id="pencil"])');
@@ -92,7 +96,6 @@ export class FRAssuredDetailsPage {
 
     for (let i = 0; i < 4; i++) {
       await this.addressSubDetails.click();
-      await this.page.waitForTimeout(200);
     };
 
     await this.houseNumber.fill('123/45');
@@ -102,6 +105,27 @@ export class FRAssuredDetailsPage {
     await this.addressRoad.fill('ทดสอบถนน');
     
     await this.applyAddress.click();
+    await this.confirmButton.click();
+  }
+
+  //กรอกข้อมูลสถานที่ตั้งหรือเก็บทรัพย์สินเอาประกันภัย
+  async fillLocationForm() {
+    await this.openLocationForm.scrollIntoViewIfNeeded();
+    await this.openLocationForm.click();
+    await this.addressDetails.click();
+
+    for (let i = 0; i < 4; i++) {
+      await this.addressSubDetails.click();
+    };
+
+    await this.houseNumber.fill('123/45');
+    await this.addressLine.fill('หมู่บ้านทดสอบ');
+    await this.addressMoo.fill('2');
+    await this.addressSoi.fill('ทดสอบซอย');
+    await this.addressRoad.fill('ทดสอบถนน');
+    await this.landCode.fill('123');
+    await this.buildingName.fill('อาคารทดสอบ');
+    
     await this.confirmButton.click();
   }
 
@@ -236,7 +260,6 @@ export class FRAssuredDetailsPage {
     //โฟกัสก่อน แล้วพิมพ์ให้เหมือน user พิมพ์จริง ป้องกันระบบไม่ autocomplete ให้
     await this.addressDetails.click();
     await this.addressDetails.pressSequentially('ระนอง, กะเปอร์', { delay: 100 }); // ใส่ delay เล็กๆ ให้ระบบจับการพิมพ์
-    await this.page.waitForTimeout(200);
     await expect(this.addressSubDetails.getByText('ระนอง')).toBeVisible();
 
     /* ไว้ใช้ตอนบัคหายแล้ว
@@ -244,7 +267,7 @@ export class FRAssuredDetailsPage {
 
     for (const address of addressSet) {
       await this.addressDetails.pressSequentially(address + ', ', { delay: 100 });
-      await this.page.waitForTimeout(200);
+      
       await expect(this.addressSubDetails.getByText(address)).toBeVisible();
     };
     */
@@ -253,16 +276,13 @@ export class FRAssuredDetailsPage {
     await expect(this.addressDetails).toHaveValue(/ระนอง, กะเปอร์/);
   }
 
-  //กรอกข้อมูลที่อยู่ของผู้เอาประกันภัย และนำไปใช้กับสถานที่เอาประกันภัย
+  //กรอกข้อมูลที่อยู่ของผู้เอาประกันภัยที่อยู่ในพื้นที่อันตราย และนำไปใช้กับสถานที่เอาประกันภัย
   async fillAddressFormWithDangerousArea() {
     await this.openAddressForm.scrollIntoViewIfNeeded();
     await this.openAddressForm.click();
     await this.addressDetails.click();
 
-    test.setTimeout(0);
-    await this.page.pause();
     await this.addressDetails.pressSequentially('รองเมือง, ', { delay: 100 });
-    await this.page.waitForTimeout(200);
     await this.addressSubDetails.click();
 
     await this.houseNumber.fill('123/45');
@@ -275,5 +295,29 @@ export class FRAssuredDetailsPage {
     await this.confirmButton.click();
 
     await expect(this.page.getByText('กรุณาระบุพื้นที่อันตราย')).toBeVisible();
+  }
+
+  //กรอกข้อมูลสถานที่ตั้งหรือเก็บทรัพย์สินเอาประกันภัยที่อยู่ในพื้นที่อันตราย
+  async fillLocationFormWithDangerousArea() {
+    await this.openLocationForm.scrollIntoViewIfNeeded();
+    await this.openLocationForm.click();
+    await this.addressDetails.click();
+
+    await this.addressDetails.pressSequentially('รองเมือง, ', { delay: 100 });
+    await this.addressSubDetails.click();
+
+    await expect(this.page.getByText(/ระบบตรวจพบว่า[\s\S]*ที่อยู่ของคุณอยู่ในพื้นที่อันตราย/)).toBeVisible();
+
+    await this.houseNumber.fill('123/45');
+    await this.addressLine.fill('หมู่บ้านทดสอบ');
+    await this.addressMoo.fill('2');
+    await this.addressSoi.fill('ทดสอบซอย');
+    await this.addressRoad.fill('ทดสอบถนน');
+    await this.landCode.fill('123');
+    await this.buildingName.fill('อาคารทดสอบ');
+    
+    await this.confirmButton.click();
+
+    await expect(this.page.getByText('Invalid uuid')).toBeVisible();
   }
 }
